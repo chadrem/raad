@@ -1,3 +1,7 @@
+# 0.0.1 03-14-2014
+- Fork project and name it raad_totem.
+- From this point forward, this Changelog will not be updated.  Read git log instead.
+
 # 0.3.1, 08-24-2011
 - initial release. support for MRI 1.8 & 1.9 only
 
