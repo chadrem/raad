@@ -1,6 +1,6 @@
 # Raad - Totem
 
-This gem allows you to easily create daemons (also known as servers, services, or background processes) in a project generated with [Totem](https://github.com/chadrem/totem).
+This gem allows you to easily create daemons (also known as servers, services, or background processes) in a project generated with [Totem](https://github.com/chadrem/totem).  Both MRI and Jruby are supported.
 
 This is a fork of the [Raad](https://github.com/colinsurprenant/raad) gem that is modified for Totem projects.  All credit goes to the original project as they did all the hard work.
 
