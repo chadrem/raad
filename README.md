@@ -8,6 +8,7 @@ This is a fork of the [Raad](https://github.com/colinsurprenant/raad) gem that i
 
 - Removal of log4j since Totem already has a built in logger.
 - Integration with Totem's environment setting.
+- Change namespaces so as not to conflict with Raad if both gems are installed.
 
 ## Installation
 
