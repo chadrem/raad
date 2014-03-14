@@ -39,17 +39,14 @@ module RaadTotem
         exit!(false)
       end
 
-      # load config if present
-      Configuration.load(@parsed_options[:config] || File.expand_path("./config/#{default_service_name(service_class)}.rb"))
-
       # default service name
-      @service_name = @parsed_options[:name] || Configuration.daemon_name || default_service_name(service_class)
+      @service_name = @parsed_options[:name] || default_service_name(service_class)
 
       # @pid_file is required to become Daemonizable
       @pid_file = @parsed_options.delete(:pid_file) || "./#{@service_name}.pid"
 
       # default stop timeout
-      @stop_timeout = (@parsed_options.delete(:stop_timeout) || Configuration.stop_timeout || STOP_TIMEOUT).to_i
+      @stop_timeout = (@parsed_options.delete(:stop_timeout) || STOP_TIMEOUT).to_i
     end
 
     def run
@@ -159,10 +156,10 @@ module RaadTotem
       }
 
       options_parser ||= OptionParser.new do |opts|
-        opts.banner = "usage: ruby <service>.rb [options] start|stop"
+        opts.banner = "USAGE: ruby <service>.rb [options] start|stop"
 
         opts.separator ""
-        opts.separator "RaadTotem common options:"
+        opts.separator "Service Options:"
 
         opts.on('-c', '--config FILE', "config file (default: ./config/<service>.rb)") { |v| @parsed_options[:config] = v }
         opts.on('-d', '--daemonize', "run daemonized in the background (default: #{@parsed_options[:daemonize]})") { |v| @parsed_options[:daemonize] = v }

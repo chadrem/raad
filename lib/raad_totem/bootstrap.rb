@@ -5,10 +5,10 @@ module RaadTotem
   class Bootstrap
 
     CALLERS_TO_IGNORE = [ # :nodoc:
-      /\/raad(\/(bootstrap))?\.rb$/,    # all raad code
-      /rubygems\/custom_require\.rb$/,  # rubygems require hacks
-      /bundler(\/runtime)?\.rb/,        # bundler require hacks
-      /<internal:/                      # internal in ruby >= 1.9.2
+      /\/raad_totem(\/(bootstrap))?\.rb$/,    # all raad code
+      /rubygems\/custom_require\.rb$/,        # rubygems require hacks
+      /bundler(\/runtime)?\.rb/,              # bundler require hacks
+      /<internal:/                            # internal in ruby >= 1.9.2
     ]
 
     CALLERS_TO_IGNORE.concat(RUBY_IGNORE_CALLERS) if defined?(RUBY_IGNORE_CALLERS)
