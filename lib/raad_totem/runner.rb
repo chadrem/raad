@@ -50,16 +50,6 @@ module RaadTotem
 
       # default stop timeout
       @stop_timeout = (@parsed_options.delete(:stop_timeout) || Configuration.stop_timeout || STOP_TIMEOUT).to_i
-
-      # logger options
-      @parsed_options[:log_file] = (@parsed_options[:daemonize] ? File.expand_path("#{@service_name}.log") : nil) unless @parsed_options[:log_file]
-      @parsed_options[:log_stdout] = !@parsed_options[:daemonize] unless @parsed_options[:log_stdout]
-      @logger_options = {
-        :file => @parsed_options.delete(:log_file) || Configuration.log_file,
-        :stdout => @parsed_options.delete(:log_stdout) || Configuration.log_stdout,
-        :verbose => @parsed_options.delete(:verbose) || Configuration.verbose,
-        :pattern => @parsed_options.delete(:log_pattern) || Configuration.log_pattern,
-      }
     end
 
     def run
@@ -87,20 +77,16 @@ module RaadTotem
     private
 
     def start_service
-      # setup logging
-      Logger.setup(@logger_options)
-      Logger.level = Configuration.log_level if Configuration.log_level
-
-      Logger.debug("initializing #{@service_name} service")
+      Totem.logger.debug("initializing #{@service_name} service")
 
       # create service instance
       service = @service_class.new
 
       # important to display this after service instantiation which can set RaadTotem.env
-      Logger.info("starting #{@service_name} service in #{RaadTotem.env.to_s} mode")
+      Totem.logger.info("starting #{@service_name} service in #{RaadTotem.env.to_s} mode")
 
       at_exit do
-        Logger.info(">> RaadTotem service wrapper stopped")
+        Totem.logger.info(">> RaadTotem service wrapper stopped")
       end
 
       # do not trap :QUIT because its not supported in jruby
@@ -124,7 +110,7 @@ module RaadTotem
     def stop_service(service)
       return if @stop_lock.synchronize{s = @stop_signaled; @stop_signaled = true; s}
 
-      Logger.info("stopping #{@service_name} service")
+      Totem.logger.info("stopping #{@service_name} service")
       service.stop if service.respond_to?(:stop)
       RaadTotem.stopped = true
     end
@@ -143,10 +129,10 @@ module RaadTotem
           try = 0; join = nil
           while (try += 1) <= @stop_timeout && join.nil? do
             join = thread.join(SECOND)
-            Logger.debug("waiting for service to stop #{try}/#{@stop_timeout}") if join.nil?
+            Totem.logger.debug("waiting for service to stop #{try}/#{@stop_timeout}") if join.nil?
           end
           if join.nil?
-            Logger.error("stop timeout exhausted, killing service thread")
+            Totem.logger.error("stop timeout exhausted, killing service thread")
             thread.kill
             return false
           end
@@ -179,11 +165,6 @@ module RaadTotem
         opts.separator "RaadTotem common options:"
 
         opts.on('-e', '--environment NAME', "set the execution environment (default: #{RaadTotem.env.to_s})") { |v| RaadTotem.env = v }
-
-        opts.on('-l', '--log FILE', "log to file (default: in console mode: no, daemonized: <service>.log)") { |file| @parsed_options[:log_file] = file }
-        opts.on('-s', '--stdout', "log to stdout (default: in console mode: true, daemonized: false)") { |v| @parsed_options[:log_stdout] = v }
-        opts.on('-v', '--verbose', "enable verbose logging (default: #{@parsed_options[:verbose]})") { |v| @parsed_options[:verbose] = v }
-        opts.on('--pattern PATTERN', "log4r log formatter pattern") { |v| @parsed_options[:log_pattern] = v }
 
         opts.on('-c', '--config FILE', "config file (default: ./config/<service>.rb)") { |v| @parsed_options[:config] = v }
         opts.on('-d', '--daemonize', "run daemonized in the background (default: #{@parsed_options[:daemonize]})") { |v| @parsed_options[:daemonize] = v }

@@ -1,3 +1,5 @@
+require 'totem'
+
 require 'raad_totem/version'
 require 'raad_totem/env'
 require 'raad_totem/logger'

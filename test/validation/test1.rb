@@ -9,12 +9,12 @@ class Test1
   def start
     @stopped = false
     sleep(3)
-    Raad::Logger.info("test1 running")
+    puts 'test1 running'
     sleep(0.1) while !@stopped
   end
 
   def stop
-    Raad::Logger.info("test1 stop called")
+    puts 'test1 stop called'
     @stopped = true
   end
 
