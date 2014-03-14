@@ -58,7 +58,7 @@ module RaadTotem
   end
 
   at_exit do
-    unless defined?($RAAD_NOT_RUN)
+    unless defined?($RAAD_TOTEM_NOT_RUN)
       if $!.nil? && $0 == RaadTotem::Bootstrap.service_file
         RaadTotem::Bootstrap.run!
       end

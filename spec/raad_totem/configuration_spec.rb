@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'raad/version'
+require 'raad_totem/configuration'
 
-describe "Raad VERSION" do
+describe RaadTotem::Configuration do
   it "should work" do
     true.should be_true
   end

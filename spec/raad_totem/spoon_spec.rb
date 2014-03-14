@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'raad//env'
-require 'raad/spoon' if Raad.jruby?
+require 'raad_totem//env'
+require 'raad_totem/spoon' if RaadTotem.jruby?
 
-if Raad.jruby?
+if RaadTotem.jruby?
 
   describe Spoon do
     it "should work" do

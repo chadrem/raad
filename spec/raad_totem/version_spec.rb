@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'raad/logger'
+require 'raad_totem/version'
 
-describe Raad::Logger do
+describe "RaadTotem VERSION" do
   it "should work" do
     true.should be_true
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'raad/env'
-require 'raad/unix_daemon'
+require 'raad_totem/env'
+require 'raad_totem/unix_daemon'
 require 'timeout'
 
 class TestService
@@ -14,7 +14,7 @@ class TestService
 end
 
 module Spoon
-end unless Raad.jruby?
+end unless RaadTotem.jruby?
 
 describe 'UnixDaemon' do
 
@@ -38,7 +38,7 @@ describe 'UnixDaemon' do
       @service.daemonize([], 'test') do
         Thread.new{Thread.stop}.join(5)
       end
-     
+
       Timeout.timeout(5) do
         while !File.exist?(@service.pid_file); sleep(0.1); end
         true
@@ -66,7 +66,7 @@ describe 'UnixDaemon' do
         true
       end.should == true
     end
-  end unless Raad.jruby?
+  end unless RaadTotem.jruby?
 
   describe "jruby daemonize (from any ruby)" do
 
@@ -74,12 +74,12 @@ describe 'UnixDaemon' do
 
     it "should swap start for post_fork and call spawnp with args" do
       @service.should_receive(:remove_stale_pid_file).once
-      Raad.should_receive(:jruby?).and_return(true)
-      Spoon.should_receive(:spawnp).with(Raad.ruby_path, "-JXmx=256m", $0, "test", "post_fork")
+      RaadTotem.should_receive(:jruby?).and_return(true)
+      Spoon.should_receive(:spawnp).with(RaadTotem.ruby_path, "-JXmx=256m", $0, "test", "post_fork")
 
-      Raad.ruby_options = "-JXmx=256m"
+      RaadTotem.ruby_options = "-JXmx=256m"
       @service.daemonize(["test", "start"], 'test')
-      Raad.ruby_options = ""
+      RaadTotem.ruby_options = ""
     end
   end
 
@@ -88,7 +88,7 @@ describe 'UnixDaemon' do
     it "should daemonize" do
       false.should == false
     end
-  end if Raad.jruby?
+  end if RaadTotem.jruby?
 
   describe "post_fork_setup" do
 
