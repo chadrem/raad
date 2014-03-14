@@ -82,8 +82,8 @@ module RaadTotem
       # create service instance
       service = @service_class.new
 
-      # important to display this after service instantiation which can set RaadTotem.env
-      Totem.logger.info("starting #{@service_name} service in #{RaadTotem.env.to_s} mode")
+      # important to display this after service instantiation.
+      Totem.logger.info("starting #{@service_name} service")
 
       at_exit do
         Totem.logger.info(">> RaadTotem service wrapper stopped")
@@ -163,8 +163,6 @@ module RaadTotem
 
         opts.separator ""
         opts.separator "RaadTotem common options:"
-
-        opts.on('-e', '--environment NAME', "set the execution environment (default: #{RaadTotem.env.to_s})") { |v| RaadTotem.env = v }
 
         opts.on('-c', '--config FILE', "config file (default: ./config/<service>.rb)") { |v| @parsed_options[:config] = v }
         opts.on('-d', '--daemonize', "run daemonized in the background (default: #{@parsed_options[:daemonize]})") { |v| @parsed_options[:daemonize] = v }
