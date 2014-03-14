@@ -1,9 +1,26 @@
-# Raad
+Raad - Totem
+Authored by Chad Remesch (chad@remesch.com) as a derivate of the original Raad Ruby gem.
+
+  Copyright 2014 Chad Remesch
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-------------------------------------------------------------------------------
 
 Raad - Ruby as a Daemon lightweight service wrapper
 Authored by Colin Surprenant, [@colinsurprenant][twitter], [colin.surprenant@needium.com][needium], [colin.surprenant@gmail.com][gmail], [http://github.com/colinsurprenant][github]
 
-  Copyright 2011 PraizedMedia Inc. 
+  Copyright 2011 PraizedMedia Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -47,7 +64,7 @@ Authored by Colin Surprenant, [@colinsurprenant][twitter], [colin.surprenant@nee
 -------------------------------------------------------------------------------
 
   Portions of this code are from the Sinatra project (https://github.com/bmizerany/sinatra) and under the following license:
-  Copyright (c) 2007, 2008, 2009, 2010, 2011 Blake Mizerany 
+  Copyright (c) 2007, 2008, 2009, 2010, 2011 Blake Mizerany
 
   Permission is hereby granted, free of charge, to any person
   obtaining a copy of this software and associated documentation
@@ -73,7 +90,7 @@ Authored by Colin Surprenant, [@colinsurprenant][twitter], [colin.surprenant@nee
 -------------------------------------------------------------------------------
 
   Portions of this code are from the Spoon project https://github.com/headius/spoon) and under the following license:
-  
+
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
