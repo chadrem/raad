@@ -165,6 +165,9 @@ module RaadTotem
         opts.on('-P', '--pid FILE', "pid file when daemonized (default: <service>.pid)") { |file| @parsed_options[:pid_file] = file }
         opts.on('-r', '--redirect FILE', "redirect stdout to FILE when daemonized (default: no)") { |v| @parsed_options[:redirect] = v }
         opts.on('-n', '--name NAME', "daemon process name (default: <service>)") { |v| @parsed_options[:name] = v }
+        opts.on('-e', '--environment', "Totem component") { |v| Totem.component = v }
+        opts.on('-c', '--component', "Totem component") { |v| Totem.component = v }
+        opts.on('-i', '--instance', "Totem instance") { |v| Totem.instance = v }
         opts.on('--timeout SECONDS', "seconds to wait before force stopping the service (default: 60)") { |v| @parsed_options[:stop_timeout] = v }
         opts.on('--ruby opts', "daemonized ruby interpreter specifc options") { |v| RaadTotem.ruby_options = v }
 
