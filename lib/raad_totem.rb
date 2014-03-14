@@ -2,7 +2,6 @@ require 'totem'
 
 require 'raad_totem/version'
 require 'raad_totem/env'
-require 'raad_totem/logger'
 require 'raad_totem/configuration'
 require 'raad_totem/unix_daemon'
 require 'raad_totem/signal_trampoline'
