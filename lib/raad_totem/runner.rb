@@ -161,7 +161,6 @@ module RaadTotem
         opts.separator ""
         opts.separator "Service Options:"
 
-        opts.on('-c', '--config FILE', "config file (default: ./config/<service>.rb)") { |v| @parsed_options[:config] = v }
         opts.on('-d', '--daemonize', "run daemonized in the background (default: #{@parsed_options[:daemonize]})") { |v| @parsed_options[:daemonize] = v }
         opts.on('-P', '--pid FILE', "pid file when daemonized (default: <service>.pid)") { |file| @parsed_options[:pid_file] = file }
         opts.on('-r', '--redirect FILE', "redirect stdout to FILE when daemonized (default: no)") { |v| @parsed_options[:redirect] = v }
