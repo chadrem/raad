@@ -1,6 +1,6 @@
-module Raad
+module RaadTotem
 
-  # The bootstrap class for Raad. This will execute in the at_exit
+  # The bootstrap class for RaadTotem. This will execute in the at_exit
   # handler to run the service.
   class Bootstrap
 
@@ -59,8 +59,8 @@ module Raad
 
   at_exit do
     unless defined?($RAAD_NOT_RUN)
-      if $!.nil? && $0 == Raad::Bootstrap.service_file
-        Raad::Bootstrap.run!
+      if $!.nil? && $0 == RaadTotem::Bootstrap.service_file
+        RaadTotem::Bootstrap.run!
       end
     end
   end

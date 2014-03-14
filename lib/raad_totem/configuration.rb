@@ -1,9 +1,9 @@
-module Raad
+module RaadTotem
   module Configuration
     extend self
 
     def self.init(&block)
-      instance_eval(&block) 
+      instance_eval(&block)
     end
 
     def [](key)

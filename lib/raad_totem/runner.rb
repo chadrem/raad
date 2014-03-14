@@ -2,7 +2,7 @@ require 'optparse'
 require 'timeout'
 require 'thread'
 
-module Raad
+module RaadTotem
   class Runner
     include Daemonizable
 
@@ -24,7 +24,7 @@ module Raad
       @stop_signaled = false
 
       # parse command line options and set @parsed_options
-      options_parser = service_class.respond_to?(:options_parser) ? service_class.options_parser(create_options_parser, Raad.custom_options) : create_options_parser
+      options_parser = service_class.respond_to?(:options_parser) ? service_class.options_parser(create_options_parser, RaadTotem.custom_options) : create_options_parser
       begin
         options_parser.parse!(argv)
       rescue OptionParser::InvalidOption => e
@@ -42,7 +42,7 @@ module Raad
       # load config if present
       Configuration.load(@parsed_options[:config] || File.expand_path("./config/#{default_service_name(service_class)}.rb"))
 
-      # default service name 
+      # default service name
       @service_name = @parsed_options[:name] || Configuration.daemon_name || default_service_name(service_class)
 
       # @pid_file is required to become Daemonizable
@@ -65,21 +65,21 @@ module Raad
     def run
       # check for stop command, @pid_file must be set
       if @parsed_options[:command] == 'stop'
-        puts(">> Raad service wrapper v#{VERSION} stopping")
+        puts(">> RaadTotem service wrapper v#{VERSION} stopping")
         # first send the TERM signal which will invoke the daemon wait_or_will method which will timeout after @stop_timeout
         # if still not stopped afer @stop_timeout + 2 seconds, KILL -9 will be sent.
-        success = send_signal('TERM', @stop_timeout + (2 * SECOND)) 
+        success = send_signal('TERM', @stop_timeout + (2 * SECOND))
         exit(success)
       end
 
-      Dir.chdir(File.expand_path(File.dirname("./"))) unless Raad.test?
+      Dir.chdir(File.expand_path(File.dirname("./"))) unless RaadTotem.test?
 
       if @parsed_options[:command] == 'post_fork'
         # we've been spawned and re executed, finish setup
         post_fork_setup(@service_name, @parsed_options[:redirect])
         start_service
       else
-        puts(">> Raad service wrapper v#{VERSION} starting")
+        puts(">> RaadTotem service wrapper v#{VERSION} starting")
         @parsed_options[:daemonize] ? daemonize(@argv, @service_name, @parsed_options[:redirect]) {start_service} : start_service
       end
     end
@@ -96,11 +96,11 @@ module Raad
       # create service instance
       service = @service_class.new
 
-      # important to display this after service instantiation which can set Raad.env
-      Logger.info("starting #{@service_name} service in #{Raad.env.to_s} mode")
+      # important to display this after service instantiation which can set RaadTotem.env
+      Logger.info("starting #{@service_name} service in #{RaadTotem.env.to_s} mode")
 
       at_exit do
-        Logger.info(">> Raad service wrapper stopped")
+        Logger.info(">> RaadTotem service wrapper stopped")
       end
 
       # do not trap :QUIT because its not supported in jruby
@@ -123,10 +123,10 @@ module Raad
 
     def stop_service(service)
       return if @stop_lock.synchronize{s = @stop_signaled; @stop_signaled = true; s}
-      
+
       Logger.info("stopping #{@service_name} service")
       service.stop if service.respond_to?(:stop)
-      Raad.stopped = true
+      RaadTotem.stopped = true
     end
 
     # try to do a timeout join periodically on the given thread. if the join succeed then the stop
@@ -176,9 +176,9 @@ module Raad
         opts.banner = "usage: ruby <service>.rb [options] start|stop"
 
         opts.separator ""
-        opts.separator "Raad common options:"
-    
-        opts.on('-e', '--environment NAME', "set the execution environment (default: #{Raad.env.to_s})") { |v| Raad.env = v }
+        opts.separator "RaadTotem common options:"
+
+        opts.on('-e', '--environment NAME', "set the execution environment (default: #{RaadTotem.env.to_s})") { |v| RaadTotem.env = v }
 
         opts.on('-l', '--log FILE', "log to file (default: in console mode: no, daemonized: <service>.log)") { |file| @parsed_options[:log_file] = file }
         opts.on('-s', '--stdout', "log to stdout (default: in console mode: true, daemonized: false)") { |v| @parsed_options[:log_stdout] = v }
@@ -191,7 +191,7 @@ module Raad
         opts.on('-r', '--redirect FILE', "redirect stdout to FILE when daemonized (default: no)") { |v| @parsed_options[:redirect] = v }
         opts.on('-n', '--name NAME', "daemon process name (default: <service>)") { |v| @parsed_options[:name] = v }
         opts.on('--timeout SECONDS', "seconds to wait before force stopping the service (default: 60)") { |v| @parsed_options[:stop_timeout] = v }
-        opts.on('--ruby opts', "daemonized ruby interpreter specifc options") { |v| Raad.ruby_options = v }
+        opts.on('--ruby opts', "daemonized ruby interpreter specifc options") { |v| RaadTotem.ruby_options = v }
 
         opts.on('-h', '--help', 'display help message') { show_options(options_parser) }
       end
@@ -206,6 +206,6 @@ module Raad
       puts(opts)
       exit!(false)
     end
-     
+
   end
 end

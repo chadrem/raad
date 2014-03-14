@@ -1,10 +1,10 @@
 require 'log4r'
 
-module Raad
+module RaadTotem
   module Logger
-    
+
     extend self
-    
+
     # Sets up the logging for the runner
     # @return [Logger] The logger object
     def setup(options = {})
@@ -32,8 +32,8 @@ module Raad
       @log.level = @verbose ? Log4r::DEBUG : levels[l]
     end
 
-    private 
-     
+    private
+
     # setup file logging
     #
     # @param log [Logger] The logger to add file logging too
@@ -55,7 +55,7 @@ module Raad
     def setup_stdout_logger(log, log_format)
       @log.add(Log4r::StdoutOutputter.new('console', :formatter => log_format))
     end
-    
+
     def method_missing(sym, *args)
       @log.send(sym, *args)
     end

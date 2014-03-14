@@ -1,7 +1,7 @@
 require 'etc'
 require 'timeout'
 
-require 'raad/spoon' if Raad.jruby?
+require 'raad/spoon' if RaadTotem.jruby?
 
 module Process
 
@@ -21,19 +21,19 @@ class PidFileExist < RuntimeError; end
 
 # module Daemonizable requires that the including class defines the @pid_file instance variable
 module Daemonizable
-    
+
   def pid
     File.exist?(@pid_file) ? open(@pid_file).read.to_i : nil
   end
-  
+
   def daemonize(argv, name, stdout_file = nil)
     remove_stale_pid_file
     pwd = Dir.pwd
 
-    if Raad.jruby?
+    if RaadTotem.jruby?
       # in jruby the process is to posix-spawn a new process and re execute ourself using Spoon.
       # swap command 'start' for 'post_fork' to signal the second exec
-      spanw_options = [Raad.ruby_path].concat(Raad.ruby_options)
+      spanw_options = [RaadTotem.ruby_path].concat(RaadTotem.ruby_options)
       spanw_options << $0
       spanw_options.concat(argv.map{|arg| arg == 'start' ? 'post_fork' : arg})
       Spoon.spawnp(*spanw_options)
@@ -42,7 +42,7 @@ module Daemonizable
       Process.fork do
         Process.setsid
         exit if fork # exit parent
- 
+
         Dir.chdir(pwd)
         post_fork_setup(name, stdout_file)
 
@@ -88,7 +88,7 @@ module Daemonizable
     remove_pid_file
     false
   end
-  
+
   def force_kill_and_remove_pid_file(pid)
     puts(">> sending KILL signal to process #{pid}")
     Process.kill("KILL", pid)
@@ -99,7 +99,7 @@ module Daemonizable
     remove_pid_file
     false
   end
-  
+
   def read_pid_file
     if File.file?(@pid_file) && pid = File.read(@pid_file)
       pid.to_i

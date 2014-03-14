@@ -1,8 +1,8 @@
 require 'rbconfig'
 require 'thread'
 
-module Raad
-  
+module RaadTotem
+
   @env = :development
   @custom_options = {}
   @stopped = false
@@ -67,7 +67,7 @@ module Raad
   #
   # @return [String] absolute path of current interpreter
   def ruby_path
-    File.join(Config::CONFIG["bindir"], Config::CONFIG["RUBY_INSTALL_NAME"] + Config::CONFIG["EXEEXT"])
+    File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["RUBY_INSTALL_NAME"] + RbConfig::CONFIG["EXEEXT"])
   end
 
   # ruby interpreter command line options
@@ -84,7 +84,7 @@ module Raad
     @ruby_options = options_str.split
   end
 
-  # a request to stop the service has been received (or the #start method has returned and, if defined, the service #stop method has been called by Raad.
+  # a request to stop the service has been received (or the #start method has returned and, if defined, the service #stop method has been called by RaadTotem.
   #
   # @return [Boolean] true is the service has been stopped
   def stopped?
