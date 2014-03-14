@@ -1,7 +1,7 @@
 require 'rake'
 require 'rubygems'
 
-task :default => :test
+task :default => :spec
 
 begin
   require 'rspec/core/rake_task'
@@ -12,14 +12,4 @@ begin
   end
 rescue NameError, LoadError => e
   puts e
-end
-
-desc 'run validations in the current ruby env'
-task :validation  do
-  exec 'test/validate.sh'
-end
-
-desc 'perform specs and validation'
-task :test => [:spec] do
-  exec 'test/validate.sh'
 end
