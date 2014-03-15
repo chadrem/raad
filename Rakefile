@@ -1,5 +1,4 @@
-require 'rake'
-require 'rubygems'
+require 'bundler/gem_tasks'
 
 task :default => :spec
 
