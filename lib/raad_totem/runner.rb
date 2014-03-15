@@ -59,7 +59,7 @@ module RaadTotem
         exit(success)
       end
 
-      Dir.chdir(File.expand_path(File.dirname("./"))) unless RaadTotem.test?
+      Dir.chdir(File.expand_path(File.dirname("./")))
 
       if @parsed_options[:command] == 'post_fork'
         # we've been spawned and re executed, finish setup
