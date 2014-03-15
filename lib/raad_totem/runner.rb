@@ -39,11 +39,10 @@ module RaadTotem
         exit!(false)
       end
 
-      # default service name
-      @service_name = @parsed_options[:name] || default_service_name(service_class)
+      Totem.component = default_service_name(service_class)
 
       # @pid_file is required to become Daemonizable
-      @pid_file = @parsed_options.delete(:pid_file) || "./#{@service_name}.pid"
+      @pid_file = @parsed_options.delete(:pid_file) || default_pid_path
 
       # default stop timeout
       @stop_timeout = (@parsed_options.delete(:stop_timeout) || STOP_TIMEOUT).to_i
@@ -63,24 +62,32 @@ module RaadTotem
 
       if @parsed_options[:command] == 'post_fork'
         # we've been spawned and re executed, finish setup
-        post_fork_setup(@service_name, @parsed_options[:redirect])
+        post_fork_setup(Totem.component, (@parsed_options[:redirect] || default_redirect_path))
         start_service
       else
         puts(">> RaadTotem service wrapper v#{VERSION} starting")
-        @parsed_options[:daemonize] ? daemonize(@argv, @service_name, @parsed_options[:redirect]) {start_service} : start_service
+        @parsed_options[:daemonize] ? daemonize(@argv, Totem.component, @parsed_options[:redirect]) {start_service} : start_service
       end
     end
 
     private
 
+    def default_redirect_path
+      return File.join(Totem.root, 'log', "#{Totem.process_name}.stdout"
+    end
+
+    def default_pid_path
+      return File.join(Totem.root, 'tmp', 'pid', "#{Totem.process_name}.stdout"
+    end
+
     def start_service
-      Totem.logger.debug("initializing #{@service_name} service")
+      Totem.logger.debug("initializing #{Totem.component} service")
 
       # create service instance
       service = @service_class.new
 
       # important to display this after service instantiation.
-      Totem.logger.info("starting #{@service_name} service")
+      Totem.logger.info("starting #{Totem.component} service")
 
       at_exit do
         Totem.logger.info(">> RaadTotem service wrapper stopped")
@@ -107,7 +114,7 @@ module RaadTotem
     def stop_service(service)
       return if @stop_lock.synchronize{s = @stop_signaled; @stop_signaled = true; s}
 
-      Totem.logger.info("stopping #{@service_name} service")
+      Totem.logger.info("stopping #{Totem.component} service")
       service.stop if service.respond_to?(:stop)
       RaadTotem.stopped = true
     end
@@ -151,8 +158,7 @@ module RaadTotem
     # @return [OptionParser] Creates the options parser for the runner with the default options
     def create_options_parser
       @parsed_options ||= {
-        :daemonize => false,
-        :verbose => false,
+        :daemonize => false
       }
 
       options_parser ||= OptionParser.new do |opts|
@@ -161,15 +167,13 @@ module RaadTotem
         opts.separator ""
         opts.separator "Service Options:"
 
-        opts.on('-d', '--daemonize', "run daemonized in the background (default: #{@parsed_options[:daemonize]})") { |v| @parsed_options[:daemonize] = v }
-        opts.on('-P', '--pid FILE', "pid file when daemonized (default: <service>.pid)") { |file| @parsed_options[:pid_file] = file }
-        opts.on('-r', '--redirect FILE', "redirect stdout to FILE when daemonized (default: no)") { |v| @parsed_options[:redirect] = v }
-        opts.on('-n', '--name NAME', "daemon process name (default: <service>)") { |v| @parsed_options[:name] = v }
-        opts.on('-e', '--environment', "Totem component") { |v| Totem.component = v }
-        opts.on('-c', '--component', "Totem component") { |v| Totem.component = v }
-        opts.on('-i', '--instance', "Totem instance") { |v| Totem.instance = v }
-        opts.on('--timeout SECONDS', "seconds to wait before force stopping the service (default: 60)") { |v| @parsed_options[:stop_timeout] = v }
-        opts.on('--ruby opts', "daemonized ruby interpreter specifc options") { |v| RaadTotem.ruby_options = v }
+        opts.on('-d', '--daemonize', "run daemonized in the background (default: no)") { |v| @parsed_options[:daemonize] = v }
+        opts.on('-P', '--pid FILE', "pid file when daemonized (default: tmp/pids directory)") { |file| @parsed_options[:pid_file] = file }
+        opts.on('-r', '--redirect FILE', "redirect stdout when daemonized (default: log directory)") { |v| @parsed_options[:redirect] = v }
+        opts.on('-e', '--environment ENVIRONMENT', "Totem environment") { |v| Totem.env = v }
+        opts.on('-i', '--instance INSTANCE', "Totem instance") { |v| Totem.instance = v }
+        opts.on(nil,  '--timeout SECONDS', "seconds to wait before force stopping the service (default: 60)") { |v| @parsed_options[:stop_timeout] = v }
+        opts.on(nil,  '--ruby opts', "daemonized ruby interpreter specifc options") { |v| RaadTotem.ruby_options = v }
 
         opts.on('-h', '--help', 'display help message') { show_options(options_parser) }
       end
