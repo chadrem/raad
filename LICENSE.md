@@ -1,5 +1,5 @@
 Raad - Totem
-Authored by Chad Remesch (chad@remesch.com) as a derivate of the original Raad Ruby gem.
+Authored by Chad Remesch as a derivate of the original Raad Ruby gem.
 
   Copyright 2014 Chad Remesch
 
