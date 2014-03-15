@@ -75,11 +75,11 @@ module RaadTotem
     private
 
     def default_redirect_path
-      return File.join(Totem.root, 'log', "#{Totem.process_name}.stdout"
+      return File.join(Totem.root, 'log', "#{Totem.process_name}.stdout")
     end
 
     def default_pid_path
-      return File.join(Totem.root, 'tmp', 'pid', "#{Totem.process_name}.pid"
+      return File.join(Totem.root, 'tmp', 'pid', "#{Totem.process_name}.pid")
     end
 
     def start_service
