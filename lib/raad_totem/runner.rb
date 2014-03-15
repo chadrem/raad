@@ -170,8 +170,6 @@ module RaadTotem
         opts.separator "Service Options:"
 
         opts.on('-d', '--daemonize', "run daemonized in the background (default: no)") { |v| @parsed_options[:daemonize] = v }
-        opts.on('-P', '--pid FILE', "pid file when daemonized (default: #{default_pid_path})") { |file| @parsed_options[:pid_file] = file }
-        opts.on('-r', '--redirect FILE', "redirect stdout when daemonized (default: #{default_redirect_path})") { |v| @parsed_options[:redirect] = v }
         opts.on('-e', '--environment ENVIRONMENT', "Totem environment") { |v| Totem.env = v }
         opts.on('-i', '--instance INSTANCE', "Totem instance") { |v| Totem.instance = v }
         opts.on(nil,  '--timeout SECONDS', "seconds to wait before force stopping the service (default: 60)") { |v| @parsed_options[:stop_timeout] = v }
