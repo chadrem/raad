@@ -1,6 +1,7 @@
 require 'optparse'
 require 'timeout'
 require 'thread'
+require 'fileutils'
 
 module RaadTotem
   class Runner
@@ -43,6 +44,7 @@ module RaadTotem
 
       # @pid_file is required to become Daemonizable
       @pid_file = @parsed_options.delete(:pid_file) || default_pid_path
+      FileUtils.mkdir_p(File.dirname(@pid_file))
 
       # default stop timeout
       @stop_timeout = (@parsed_options.delete(:stop_timeout) || STOP_TIMEOUT).to_i
@@ -77,7 +79,7 @@ module RaadTotem
     end
 
     def default_pid_path
-      return File.join(Totem.root, 'tmp', 'pid', "#{Totem.process_name}.stdout"
+      return File.join(Totem.root, 'tmp', 'pid', "#{Totem.process_name}.pid"
     end
 
     def start_service
