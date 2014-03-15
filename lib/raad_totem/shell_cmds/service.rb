@@ -10,8 +10,6 @@ module RaadTotem
         else
           puts_usage
         end
-
-        case @args[0]
       end
 
       def start(service)
