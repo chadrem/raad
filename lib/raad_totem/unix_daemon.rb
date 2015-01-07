@@ -1,7 +1,7 @@
 require 'etc'
 require 'timeout'
 
-require 'raad/spoon' if RaadTotem.jruby?
+require 'raad_totem/spoon' if RaadTotem.jruby?
 
 module Process
 
